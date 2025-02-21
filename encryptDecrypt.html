@@ -172,10 +172,10 @@
 
     <form id="encryptForm" onsubmit="runEncryption(event)" class="active">
         <div class="form-group">
-            <label for="encryptWords" class="tooltip">Words (exactly 12 or 24 BIP-39 words, space-separated):
+            <label for="encryptWords" class="tooltip">Seed Phrase (exactly 12 or 24 BIP-39 words, space-separated):
                 <span class="tooltiptext">Type your 12 or 24-word seed phrase here. Use suggestions to pick valid BIP-39 words. Must be exactly 12 or 24 unique words.</span>
             </label>
-            <div id="encryptWords" contenteditable="true" placeholder="Type 12 or 24 BIP-39 words here (e.g., abandon ability able...)"></div>
+            <div id="encryptWords" contenteditable="true" placeholder="Type 12 or 24 BIP-39 words here (e.g., abandon present obey...)"></div>
             <div id="suggestions"></div>
         </div>
         <div class="form-group">
@@ -237,7 +237,6 @@
     <div id="error" class="error"></div>
 
     <script>
-        // Truncated BIP-39 word list - replace with full 2048-word list
         var bip39Words = ["abandon","ability","able","about","above","absent","absorb","abstract","absurd","abuse",
 "access","accident","account","accuse","achieve","acid","acoustic","acquire","across","act",
 "action","actor","actress","actual","adapt","add","addict","address","adjust","admit",
