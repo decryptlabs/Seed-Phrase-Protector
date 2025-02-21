@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIP-39 Seed Phrase Encryption/Decryption</title>
+    <title>Cipher Vault: Seed Phrase Security</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Courier New', monospace;
             max-width: 600px;
             margin: 20px auto;
             padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            border: 2px solid #00ff99;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 153, 0.3);
         }
         .form-group {
             margin-bottom: 15px;
@@ -17,11 +22,18 @@
         label {
             display: block;
             margin-bottom: 5px;
+            color: #00ff99;
+            text-shadow: 0 0 5px #00ff99;
         }
         input, textarea, button {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
+            background: #2d2d2d;
+            color: #e0e0e0;
+            border: 1px solid #00cc77;
+            border-radius: 5px;
+            display: block; /* Ensure visibility */
         }
         textarea {
             height: 100px;
@@ -30,14 +42,18 @@
         #result {
             margin-top: 20px;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px dashed #00cc77;
             word-wrap: break-word;
             max-height: 300px;
             overflow-y: auto;
+            background: #252525;
+            color: #ffffff;
+            display: block; /* Ensure visibility */
         }
         .error {
-            color: red;
+            color: #ff3366;
             margin-top: 10px;
+            text-shadow: 0 0 5px #ff3366;
         }
         .switch {
             position: relative;
@@ -58,7 +74,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
+            background-color: #666;
             transition: .4s;
             border-radius: 34px;
         }
@@ -69,12 +85,12 @@
             width: 26px;
             left: 4px;
             bottom: 4px;
-            background-color: white;
+            background-color: #e0e0e0;
             transition: .4s;
             border-radius: 50%;
         }
         input:checked + .slider {
-            background-color: #2196F3;
+            background-color: #00cc77;
         }
         input:checked + .slider:before {
             transform: translateX(26px);
@@ -92,44 +108,55 @@
         #printButton {
             margin-top: 10px;
             padding: 8px;
-            background-color: #4CAF50;
-            color: white;
+            background-color: #00cc77;
+            color: #1a1a1a;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: none; /* Hidden by default, shown via JS */
         }
         #printButton:hover {
-            background-color: #45a049;
+            background-color: #00ff99;
+            box-shadow: 0 0 10px #00ff99;
         }
         #encryptWords {
             width: 100%;
             min-height: 50px;
             padding: 8px;
-            border: 1px solid #ccc;
+            border: 1px solid #00cc77;
             box-sizing: border-box;
             outline: none;
             white-space: pre-wrap;
             overflow: auto;
+            background: #2d2d2d;
+            color: #e0e0e0;
+            border-radius: 5px;
+            display: block; /* Ensure visibility */
         }
         #encryptWords:focus {
-            border-color: #2196F3;
+            border-color: #00ff99;
+            box-shadow: 0 0 5px #00ff99;
         }
         #suggestions {
             position: absolute;
-            background: white;
-            border: 1px solid #ccc;
+            background: #2d2d2d;
+            border: 1px solid #00cc77;
             max-height: 150px;
             overflow-y: auto;
             z-index: 1000;
             display: none;
+            color: #e0e0e0;
         }
         .suggestion {
             padding: 5px;
             cursor: pointer;
         }
         .suggestion:hover {
-            background: #f0f0f0;
+            background: #3d3d3d;
         }
-        /* Tooltip styling */
+        /* Tooltip Styling */
         .tooltip {
             position: relative;
             display: inline-block;
@@ -138,18 +165,20 @@
         .tooltip .tooltiptext {
             visibility: hidden;
             width: 300px;
-            background-color: #333;
-            color: white;
+            background-color: #2d2d2d;
+            color: #00ff99;
             text-align: left;
             padding: 10px;
             border-radius: 6px;
+            border: 1px solid #00cc77;
             position: absolute;
-            z-index: 1;
+            z-index: 1001; /* Above suggestions */
             bottom: 125%;
             left: 50%;
             margin-left: -150px;
             opacity: 0;
             transition: opacity 0.3s;
+            box-shadow: 0 0 10px rgba(0, 255, 153, 0.5);
         }
         .tooltip:hover .tooltiptext {
             visibility: visible;
@@ -158,81 +187,81 @@
     </style>
 </head>
 <body>
-    <h1 id="title" class="tooltip">BIP-39 Seed Phrase Encryption
-        <span class="tooltiptext">Encrypts your 12 or 24-word BIP-39 seed phrase into a 2048-word list using a key and optional indentation for security. Toggle to decrypt and recover it.</span>
+    <h1 id="title" class="tooltip">Cipher Vault: Seed Encryption
+        <span class="tooltiptext">Welcome to the Vault! Encrypt your 12 or 24-word seed into a 2048-word cipher using a key and indent. Toggle to decrypt your secrets.</span>
     </h1>
     <div class="toggle">
         <label class="switch tooltip">
             <input type="checkbox" id="modeSwitch" onchange="toggleMode()">
             <span class="slider"></span>
-            <span class="tooltiptext">Toggle between Encrypt (default) and Decrypt modes. Encrypt hides your seed in 2048 words; Decrypt recovers it.</span>
+            <span class="tooltiptext">Flip the cipher switch: Encrypt locks your seed in 2048 words; Decrypt unlocks it with your key.</span>
         </label>
-        <span id="modeLabel">Switch to Decrypt</span>
+        <span id="modeLabel">Unlock Decryption</span>
     </div>
 
     <form id="encryptForm" onsubmit="runEncryption(event)" class="active">
         <div class="form-group">
-            <label for="encryptWords" class="tooltip">Seed Phrase (exactly 12 or 24 BIP-39 words, space-separated):
-                <span class="tooltiptext">Type your 12 or 24-word seed phrase here. Use suggestions to pick valid BIP-39 words. Must be exactly 12 or 24 unique words.</span>
+            <label for="encryptWords" class="tooltip">Super Secret Seed Phrase (12 or 24 Seed Words):
+                <span class="tooltiptext">Enter your 12 or 24-word seed phrase. Use the cipher hints to pick valid BIP-39 words — exactly 12 or 24 unique words.</span>
             </label>
-            <div id="encryptWords" contenteditable="true" placeholder="Type 12 or 24 BIP-39 words here (e.g., abandon present obey...)"></div>
+            <div id="encryptWords" contenteditable="true" placeholder="Enter your seed cipher (e.g., abandon ability able...)"></div>
             <div id="suggestions"></div>
         </div>
         <div class="form-group">
-            <label for="encryptKey" class="tooltip">Key Pattern (space-separated numbers 1-9):
-                <span class="tooltiptext">Enter numbers 1-9 (e.g., '2 3 4') as your memorable key. Determines where your words go in the 2048-word list.</span>
+            <label for="encryptKey" class="tooltip">Cipher Key (Numbers 1-9):
+                <span class="tooltiptext">Craft your key with numbers 1-9 (e.g., '2 3 4'). This secret code hides your words in the 2048-word vault.</span>
             </label>
             <input type="text" id="encryptKey" name="encryptKey" placeholder="e.g., 2 3 4" required>
         </div>
         <div class="form-group">
-            <label for="encryptIndent" class="tooltip">Indentation (number of words before key placement, 0 or more):
-                <span class="tooltiptext">Optional number (e.g., '2') to shift your words' positions. Adds security; use '0' if not needed.</span>
+            <label for="encryptIndent" class="tooltip">Vault Shift (Indent, 0+):
+                <span class="tooltiptext">Add a shift (e.g., '2') to offset your words’ hiding spots. This is for extra secrecy — set to '0' if unneeded.</span>
             </label>
             <input type="number" id="encryptIndent" name="encryptIndent" min="0" placeholder="e.g., 2" required>
         </div>
-        <button type="submit" class="tooltip">Encrypt
-            <span class="tooltiptext">Click to encrypt your seed phrase into a 2048-word list. Must have 12 or 24 valid words, a key, and indentation set.</span>
+        <button type="submit" class="tooltip">Lock Vault
+            <span class="tooltiptext">Seal your seed into a 2048-word cipher. Make sure to remember your key, shift, and seed phrase length (12 or 24), you will need these to decrypt your seed phrase.</span>
         </button>
     </form>
 
     <form id="decryptForm" onsubmit="runDecryption(event)">
         <div class="form-group">
-            <label for="decryptWords" class="tooltip">Encrypted Seed Phrase (exactly 2048 words, space-separated):
-                <span class="tooltiptext">Paste your 2048-word encrypted list here to recover your seed phrase.</span>
+            <label for="decryptWords" class="tooltip">Cipher Text (2048 Words):
+                <span class="tooltiptext">Insert your 2048-word cipher to unlock your seed phrase.</span>
             </label>
-            <textarea id="decryptWords" name="decryptWords" placeholder="Paste 2048-word encrypted string here" required></textarea>
+            <textarea id="decryptWords" name="decryptWords" placeholder="Paste your 2048-word cipher here" required></textarea>
         </div>
         <div class="form-group">
-            <label for="decryptKey" class="tooltip">Key Pattern (space-separated numbers 1-9):
-                <span class="tooltiptext">Enter the same key used to encrypt (e.g., '2 3 4') to locate your seed phrase.</span>
+            <label for="decryptKey" class="tooltip">Cipher Key (Numbers 1-9):
+                <span class="tooltiptext">Use the same key (e.g., '2 3 4') to find your hidden seed words.</span>
             </label>
             <input type="text" id="decryptKey" name="decryptKey" placeholder="e.g., 2 3 4" required>
         </div>
         <div class="form-group">
-            <label for="decryptIndent" class="tooltip">Indentation (number of words before key placement, 0 or more):
-                <span class="tooltiptext">Enter the same indentation used to encrypt (e.g., '2') to align positions.</span>
+            <label for="decryptIndent" class="tooltip">Vault Shift (Indent, 0+):
+                <span class="tooltiptext">Match the shift (e.g., '2') used to lock the vault.</span>
             </label>
             <input type="number" id="decryptIndent" name="decryptIndent" min="0" placeholder="e.g., 2" required>
         </div>
         <div class="form-group">
-            <label class="tooltip">Seed Phrase Length:
-                <span class="tooltiptext">Select the original length of your seed phrase (12 or 24) to extract it.</span>
+            <label class="tooltip">Seed Length:
+                <span class="tooltiptext">Choose 12 or 24 to match your original seed length for extraction.</span>
             </label>
             <div class="radio-group">
                 <label><input type="radio" name="seedLength" value="12" checked> 12</label>
                 <label><input type="radio" name="seedLength" value="24"> 24</label>
             </div>
         </div>
-        <button type="submit" class="tooltip">Decrypt
-            <span class="tooltiptext">Click to recover your seed phrase from the 2048-word list using the key and indentation.</span>
+        <button type="submit" class="tooltip">Unlock Vault
+            <span class="tooltiptext">Reveal your seed phrase with the correct key and shift.</span>
         </button>
     </form>
 
     <div id="result" class="tooltip">
-        <span class="tooltiptext">Shows the 2048-word encrypted list or decrypted seed phrase. Secure because it’s hard to crack without the key and indentation.</span>
+        <span class="tooltiptext">The vault’s contents: a 2048-word cipher or your decrypted seed. Uncrackable without the key and shift.</span>
     </div>
-    <button id="printButton" style="display: none;" onclick="printResult()" class="tooltip">Print Encrypted Output
-        <span class="tooltiptext">Prints only the 2048-word encrypted list. Save it securely—manual decryption tip: Start at indent + (key[0]-1), add each next key number (e.g., 2, 3, 4 cycles), repeat for 12 or 24 words.</span>
+    <button id="printButton" onclick="printResult()" class="tooltip">Etch Cipher Scroll
+        <span class="tooltiptext">Inscribe only the 2048-word cipher.</span>
     </button>
     <div id="error" class="error"></div>
 
@@ -446,7 +475,6 @@
         var encryptWordsDiv = document.getElementById("encryptWords");
         var suggestionsDiv = document.getElementById("suggestions");
 
-        // Placeholder handling
         if (!encryptWordsDiv.textContent.trim()) {
             encryptWordsDiv.classList.add("placeholder");
             encryptWordsDiv.textContent = encryptWordsDiv.getAttribute("placeholder");
@@ -460,11 +488,10 @@
         encryptWordsDiv.addEventListener("blur", function() {
             if (!this.textContent.trim()) {
                 this.textContent = this.getAttribute("placeholder");
-                this.classList.remove("placeholder");
+                this.classList.add("placeholder");
             }
         });
 
-        // Typeahead functionality
         encryptWordsDiv.addEventListener("input", function(e) {
             var text = this.textContent.trim();
             var words = text.split(/\s+/);
@@ -524,18 +551,18 @@
 
         function encryptWords(words, keyPattern, indent) {
             if (words.length !== 12 && words.length !== 24) {
-                throw new Error("Seed phrase must be exactly 12 or 24 words");
+                throw new Error("Vault requires exactly 12 or 24 words");
             }
 
             for (var i = 0; i < words.length; i++) {
                 if (bip39Words.indexOf(words[i].toLowerCase()) === -1) {
-                    throw new Error("All input words must be valid BIP-39 words");
+                    throw new Error("Invalid cipher word detected");
                 }
             }
 
             var uniqueInputWords = new Set(words.map(function(word) { return word.toLowerCase(); }));
             if (uniqueInputWords.size !== words.length) {
-                throw new Error("Input words must be unique");
+                throw new Error("Duplicate words break the cipher");
             }
 
             var positions = [];
@@ -553,7 +580,7 @@
 
             var maxPos = Math.max.apply(null, positions);
             if (maxPos >= 2048) {
-                throw new Error("Indentation and key pattern exceed 2048 positions");
+                throw new Error("Cipher shift exceeds vault limits");
             }
 
             var result = new Array(2048);
@@ -589,18 +616,18 @@
             var words = encryptedWords.trim().split(" ");
 
             if (words.length !== 2048) {
-                throw new Error("Encrypted input must contain exactly 2048 words");
+                throw new Error("Cipher must contain exactly 2048 words");
             }
 
             for (var i = 0; i < words.length; i++) {
                 if (bip39Words.indexOf(words[i].toLowerCase()) === -1) {
-                    throw new Error("All input words must be valid BIP-39 words");
+                    throw new Error("Invalid word in cipher text");
                 }
             }
 
             var uniqueWords = new Set(words.map(function(word) { return word.toLowerCase(); }));
             if (uniqueWords.size !== 2048) {
-                throw new Error("Encrypted input must contain 2048 unique words");
+                throw new Error("Cipher must have 2048 unique words");
             }
 
             var positions = [];
@@ -618,7 +645,7 @@
 
             var maxPos = Math.max.apply(null, positions);
             if (maxPos >= 2048) {
-                throw new Error("Indentation and key pattern exceed 2048 positions for given seed length");
+                throw new Error("Shift exceeds cipher bounds");
             }
 
             var seedPhrase = [];
@@ -644,19 +671,19 @@
 
             try {
                 if (wordsInput === encryptWordsDiv.getAttribute("placeholder")) {
-                    throw new Error("Please enter 12 or 24 BIP-39 words");
+                    throw new Error("Enter 12 or 24 cipher words");
                 }
                 var words = wordsInput.split(/\s+/).filter(Boolean);
                 var keyPattern = keyInput.trim().split(" ").map(function(num) {
                     var parsed = parseInt(num);
                     if (isNaN(parsed) || parsed < 1 || parsed > 9) {
-                        throw new Error("All key numbers must be integers between 1 and 9");
+                        throw new Error("Key must use numbers 1-9");
                     }
                     return parsed;
                 });
                 var indent = parseInt(indentInput);
                 if (isNaN(indent) || indent < 0) {
-                    throw new Error("Indentation must be a non-negative integer");
+                    throw new Error("Shift must be 0 or higher");
                 }
 
                 var encrypted = encryptWords(words, keyPattern, indent);
@@ -685,13 +712,13 @@
                 var keyPattern = keyInput.trim().split(" ").map(function(num) {
                     var parsed = parseInt(num);
                     if (isNaN(parsed) || parsed < 1 || parsed > 9) {
-                        throw new Error("All key numbers must be integers between 1 and 9");
+                        throw new Error("Key must use numbers 1-9");
                     }
                     return parsed;
                 });
                 var indent = parseInt(indentInput);
                 if (isNaN(indent) || indent < 0) {
-                    throw new Error("Indentation must be a non-negative integer");
+                    throw new Error("Shift must be 0 or higher");
                 }
 
                 var decrypted = decryptWords(wordsInput, keyPattern, indent, seedLength);
@@ -711,17 +738,17 @@
             var errorDiv = document.getElementById("error");
             var printButton = document.getElementById("printButton");
 
-            if (modeSwitch.checked) { // Decrypt mode
+            if (modeSwitch.checked) {
                 encryptForm.classList.remove("active");
                 decryptForm.classList.add("active");
-                title.innerHTML = "BIP-39 Word Decryption";
-                modeLabel.innerHTML = "Switch to Encrypt";
+                title.innerHTML = "Cipher Vault: Seed Decryption";
+                modeLabel.innerHTML = "Lock Encryption";
                 printButton.style.display = "none";
-            } else { // Encrypt mode
+            } else {
                 encryptForm.classList.add("active");
                 decryptForm.classList.remove("active");
-                title.innerHTML = "BIP-39 Word Encryption";
-                modeLabel.innerHTML = "Switch to Decrypt";
+                title.innerHTML = "Cipher Vault: Seed Encryption";
+                modeLabel.innerHTML = "Unlock Decryption";
                 printButton.style.display = resultDiv.innerHTML ? "block" : "none";
             }
             resultDiv.innerHTML = "";
@@ -741,7 +768,7 @@
 
             var doc = iframe.contentWindow.document;
             doc.open();
-            doc.write('<html><body>' + resultContent + '</body></html>');
+            doc.write('<html><body style="font-family: monospace; color: #000;">' + resultContent + '</body></html>');
             doc.close();
 
             iframe.contentWindow.focus();
@@ -755,7 +782,6 @@
         document.getElementById("encryptForm").classList.add("active");
         toggleMode();
 
-        // Tooltip for running locally (since it’s not tied to a specific input)
         window.onload = function() {
             var body = document.body;
             var localTip = document.createElement("div");
@@ -763,7 +789,7 @@
             localTip.style.position = "fixed";
             localTip.style.top = "10px";
             localTip.style.right = "10px";
-            localTip.innerHTML = "ℹ️<span class='tooltiptext'>Run locally: Save as 'seed-encrypt.html', open in browser (e.g., double-click). Works offline.</span>";
+            localTip.innerHTML = "🔒<span class='tooltiptext'>Forge offline: Save as 'vault.html', open in browser (e.g., double-click). No net needed.</span>";
             body.appendChild(localTip);
         };
     </script>
