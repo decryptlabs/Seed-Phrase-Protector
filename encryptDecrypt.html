@@ -33,7 +33,7 @@
             color: #e0e0e0;
             border: 1px solid #00cc77;
             border-radius: 5px;
-            display: block; /* Ensure visibility */
+            display: block;
         }
         textarea {
             height: 100px;
@@ -42,25 +42,33 @@
         #result {
             margin-top: 20px;
             padding: 10px;
-            border: 1px dashed #00cc77;
             word-wrap: break-word;
             max-height: 300px;
             overflow-y: auto;
             background: #252525;
             color: #ffffff;
-            display: block; /* Ensure visibility */
+            display: block;
+            border: none; /* Remove border when empty */
+        }
+        #result:not(:empty) {
+            border: 1px dashed #00cc77; /* Only show border when content exists */
         }
         .error {
             color: #ff3366;
             margin-top: 10px;
             text-shadow: 0 0 5px #ff3366;
         }
+        .toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
         .switch {
             position: relative;
             display: inline-block;
             width: 60px;
             height: 34px;
-            margin-bottom: 20px;
+            margin-right: 10px; /* Space between switch and label */
         }
         .switch input {
             opacity: 0;
@@ -95,6 +103,10 @@
         input:checked + .slider:before {
             transform: translateX(26px);
         }
+        #modeLabel {
+            color: #00ff99;
+            text-shadow: 0 0 5px #00ff99;
+        }
         #encryptForm, #decryptForm {
             display: none;
         }
@@ -105,21 +117,34 @@
             display: flex;
             gap: 20px;
         }
-        #printButton {
+        /* Default button style (for Print and Forge) */
+        button {
             margin-top: 10px;
             padding: 8px;
+            background: #2d2d2d;
+            color: #e0e0e0;
+            border: 1px solid #00cc77;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        button:hover:not(#lockVaultButton):not(#unlockVaultButton) {
+            background: #3d3d3d;
+            border-color: #00ff99;
+        }
+        /* Green variation for Lock/Unlock Vault */
+        #lockVaultButton, #unlockVaultButton {
             background-color: #00cc77;
             color: #1a1a1a;
             border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            text-transform: uppercase;
-            font-weight: bold;
-            display: none; /* Hidden by default, shown via JS */
         }
-        #printButton:hover {
+        #lockVaultButton:hover, #unlockVaultButton:hover {
             background-color: #00ff99;
             box-shadow: 0 0 10px #00ff99;
+        }
+        #printButton {
+            display: none; /* Hidden until cipher is created */
         }
         #encryptWords {
             width: 100%;
@@ -133,11 +158,14 @@
             background: #2d2d2d;
             color: #e0e0e0;
             border-radius: 5px;
-            display: block; /* Ensure visibility */
+            display: block;
         }
         #encryptWords:focus {
             border-color: #00ff99;
             box-shadow: 0 0 5px #00ff99;
+        }
+        #encryptWords.placeholder {
+            color: #666;
         }
         #suggestions {
             position: absolute;
@@ -148,6 +176,7 @@
             z-index: 1000;
             display: none;
             color: #e0e0e0;
+            width: 200px;
         }
         .suggestion {
             padding: 5px;
@@ -172,7 +201,7 @@
             border-radius: 6px;
             border: 1px solid #00cc77;
             position: absolute;
-            z-index: 1001; /* Above suggestions */
+            z-index: 1001;
             bottom: 125%;
             left: 50%;
             margin-left: -150px;
@@ -196,13 +225,13 @@
             <span class="slider"></span>
             <span class="tooltiptext">Flip the cipher switch: Encrypt locks your seed in 2048 words; Decrypt unlocks it with your key.</span>
         </label>
-        <span id="modeLabel">Unlock Decryption</span>
+        <span id="modeLabel">Encrypt</span>
     </div>
 
     <form id="encryptForm" onsubmit="runEncryption(event)" class="active">
         <div class="form-group">
-            <label for="encryptWords" class="tooltip">Super Secret Seed Phrase (12 or 24 Seed Words):
-                <span class="tooltiptext">Enter your 12 or 24-word seed phrase. Use the cipher hints to pick valid BIP-39 words — exactly 12 or 24 unique words.</span>
+            <label for="encryptWords" class="tooltip">Secret Words (12 or 24 Seed Words):
+                <span class="tooltiptext">Enter your 12 or 24-word seed phrase. Use the cipher hints to pick valid BIP-39 words—exactly 12 or 24 unique keys.</span>
             </label>
             <div id="encryptWords" contenteditable="true" placeholder="Enter your seed cipher (e.g., abandon ability able...)"></div>
             <div id="suggestions"></div>
@@ -215,12 +244,12 @@
         </div>
         <div class="form-group">
             <label for="encryptIndent" class="tooltip">Vault Shift (Indent, 0+):
-                <span class="tooltiptext">Add a shift (e.g., '2') to offset your words’ hiding spots. This is for extra secrecy — set to '0' if unneeded.</span>
+                <span class="tooltiptext">Add a shift (e.g., '2') to offset your words’ hiding spots. Extra secrecy—set to '0' if unneeded.</span>
             </label>
             <input type="number" id="encryptIndent" name="encryptIndent" min="0" placeholder="e.g., 2" required>
         </div>
-        <button type="submit" class="tooltip">Lock Vault
-            <span class="tooltiptext">Seal your seed into a 2048-word cipher. Make sure to remember your key, shift, and seed phrase length (12 or 24), you will need these to decrypt your seed phrase.</span>
+        <button type="submit" id="lockVaultButton" class="tooltip">Lock Vault
+            <span class="tooltiptext">Seal your seed into a 2048-word cipher. Requires 12 or 24 words, a key, and shift.</span>
         </button>
     </form>
 
@@ -252,7 +281,7 @@
                 <label><input type="radio" name="seedLength" value="24"> 24</label>
             </div>
         </div>
-        <button type="submit" class="tooltip">Unlock Vault
+        <button type="submit" id="unlockVaultButton" class="tooltip">Unlock Vault
             <span class="tooltiptext">Reveal your seed phrase with the correct key and shift.</span>
         </button>
     </form>
@@ -261,11 +290,15 @@
         <span class="tooltiptext">The vault’s contents: a 2048-word cipher or your decrypted seed. Uncrackable without the key and shift.</span>
     </div>
     <button id="printButton" onclick="printResult()" class="tooltip">Etch Cipher Scroll
-        <span class="tooltiptext">Inscribe only the 2048-word cipher.</span>
+        <span class="tooltiptext">Inscribe only the 2048-word cipher. Manual unlock: Start at shift + (key[0]-1), add next keys (e.g., 2, 3, 4 loops), take 12 or 24 words.</span>
+    </button>
+    <button id="downloadButton" onclick="downloadHTML()" class="tooltip">Forge Vault Code
+        <span class="tooltiptext">Download this vault as 'vault.html'. Open in a browser (e.g., double-click) to run offline—no net needed.</span>
     </button>
     <div id="error" class="error"></div>
 
     <script>
+        // Truncated BIP-39 word list - replace with full 2048-word list
         var bip39Words = ["abandon","ability","able","about","above","absent","absorb","abstract","absurd","abuse",
 "access","accident","account","accuse","achieve","acid","acoustic","acquire","across","act",
 "action","actor","actress","actual","adapt","add","addict","address","adjust","admit",
@@ -475,6 +508,7 @@
         var encryptWordsDiv = document.getElementById("encryptWords");
         var suggestionsDiv = document.getElementById("suggestions");
 
+        // Placeholder handling
         if (!encryptWordsDiv.textContent.trim()) {
             encryptWordsDiv.classList.add("placeholder");
             encryptWordsDiv.textContent = encryptWordsDiv.getAttribute("placeholder");
@@ -492,21 +526,24 @@
             }
         });
 
+        // Autocomplete functionality
         encryptWordsDiv.addEventListener("input", function(e) {
             var text = this.textContent.trim();
+            if (text === this.getAttribute("placeholder")) return;
+
             var words = text.split(/\s+/);
             var lastWord = words[words.length - 1];
-            var cursorPosition = window.getSelection().getRangeAt(0).startOffset;
-            var caretAtEndOfLastWord = cursorPosition >= text.length || text[cursorPosition] === " ";
+            var selection = window.getSelection();
+            var range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+            var caretAtEndOfLastWord = range && (range.startOffset >= text.length || text[range.startOffset] === " ");
 
             if (lastWord && caretAtEndOfLastWord) {
-                var matches = bip39Words.filter(function(word) {
-                    return word.startsWith(lastWord.toLowerCase());
-                }).slice(0, 5);
+                var matches = bip39Words.filter(word => word.startsWith(lastWord.toLowerCase())).slice(0, 5);
+                console.log("Typing:", lastWord, "Matches:", matches);
 
                 if (matches.length > 0) {
                     suggestionsDiv.innerHTML = "";
-                    matches.forEach(function(match) {
+                    matches.forEach(match => {
                         var suggestion = document.createElement("div");
                         suggestion.className = "suggestion";
                         suggestion.textContent = match;
@@ -742,13 +779,13 @@
                 encryptForm.classList.remove("active");
                 decryptForm.classList.add("active");
                 title.innerHTML = "Cipher Vault: Seed Decryption";
-                modeLabel.innerHTML = "Lock Encryption";
+                modeLabel.innerHTML = "Decrypt";
                 printButton.style.display = "none";
             } else {
                 encryptForm.classList.add("active");
                 decryptForm.classList.remove("active");
                 title.innerHTML = "Cipher Vault: Seed Encryption";
-                modeLabel.innerHTML = "Unlock Decryption";
+                modeLabel.innerHTML = "Encrypt";
                 printButton.style.display = resultDiv.innerHTML ? "block" : "none";
             }
             resultDiv.innerHTML = "";
@@ -779,19 +816,21 @@
             }, 1000);
         }
 
+        function downloadHTML() {
+            var htmlContent = document.documentElement.outerHTML;
+            var blob = new Blob([htmlContent], { type: "text/html" });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "vault.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
         document.getElementById("encryptForm").classList.add("active");
         toggleMode();
-
-        window.onload = function() {
-            var body = document.body;
-            var localTip = document.createElement("div");
-            localTip.className = "tooltip";
-            localTip.style.position = "fixed";
-            localTip.style.top = "10px";
-            localTip.style.right = "10px";
-            localTip.innerHTML = "🔒<span class='tooltiptext'>Forge offline: Save as 'vault.html', open in browser (e.g., double-click). No net needed.</span>";
-            body.appendChild(localTip);
-        };
     </script>
 </body>
 </html>
