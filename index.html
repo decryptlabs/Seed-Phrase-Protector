@@ -269,7 +269,7 @@
             </ul>
 
             <h3>How It Works</h3>
-            <p><strong>Encryption</strong>: Your seed phrase (12 or 24 words) is placed into specific positions within a 2048-word list. These positions are determined by your chosen key (a sequence of numbers, e.g., "2 3 4") and indentation (a starting offset, e.g., "2"). The remaining spots are filled with random BIP-39 words without any duplicates.</p>
+            <p><strong>Encryption</strong>: Your seed phrase (12 or 24 words) is placed into specific positions within a 2048-word list. These positions are determined by your chosen key (a sequence of numbers, "2 3 4") and indentation (a starting offset, "2"). The remaining spots are filled with random BIP-39 words without any duplicates.</p>
             <p><strong>Decryption</strong>: Using the same key, indentation, and the length of your original seed phrase (12 or 24), the tool extracts your seed phrase from the 2048-word list.</p>
 
             <h3>Example: Encrypting a Seed Phrase</h3>
@@ -349,20 +349,20 @@
             <label for="encryptWords" class="tooltip">Secret Seed Phrase Words (12 or 24 Seed Words):
                 <span class="tooltiptext">Enter your 12 or 24-word seed phrase. Use the hints to pick valid BIP-39 words—exactly 12 or 24 unique words.</span>
             </label>
-            <div id="encryptWords" contenteditable="true" placeholder="Enter your seed phrase (e.g., abandon ability able...)"></div>
+            <div id="encryptWords" contenteditable="true" placeholder="Enter your seed phrase (ex., abandon ability able...)"></div>
             <div id="suggestions"></div>
         </div>
         <div class="form-group">
             <label for="encryptKey" class="tooltip">Cloak Key (Numbers 1-9):
-                <span class="tooltiptext">Craft your key with numbers 1-9 (e.g., '2 3 4'). This secret code tells us where to hide your seed in the 2048-word cloak.</span>
+                <span class="tooltiptext">Craft your key with numbers 1-9 (ex., '2 3 4'). This secret code tells us where to hide your seed in the 2048-word cloak.</span>
             </label>
-            <input type="text" id="encryptKey" name="encryptKey" placeholder="e.g., 2 3 4" required>
+            <input type="text" id="encryptKey" name="encryptKey" placeholder="ex., 2 3 4" required>
         </div>
         <div class="form-group">
             <label for="encryptIndent" class="tooltip">Cloak Shift (Indent, 0+):
-                <span class="tooltiptext">Add a shift (e.g., '20') to offset your words’ hiding spots. This will ensure that your seed phrase isn't always at the beginning of the list. Use this as an extra layer of security, but it can be set to '0' if unneeded.</span>
+                <span class="tooltiptext">Add a shift (ex., '20') to offset your seed phrase hiding spots. This will ensure that your seed phrase isn't always at the beginning of the list. Use this as an extra layer of security, but it can be set to '0' if you prefer.</span>
             </label>
-            <input type="number" id="encryptIndent" name="encryptIndent" min="0" placeholder="e.g., 2" required>
+            <input type="number" id="encryptIndent" name="encryptIndent" min="0" placeholder="ex., 2" required>
         </div>
         <button type="submit" id="lockVaultButton" class="tooltip">Create Cloak
             <span class="tooltiptext">Seal your seed into a 2048-word cipher. Requires 12 or 24 words, a key, and shift.</span>
@@ -378,15 +378,15 @@
         </div>
         <div class="form-group">
             <label for="decryptKey" class="tooltip">Cloak Key (Numbers 1-9):
-                <span class="tooltiptext">Use the same key (e.g., '2 3 4') to find your hidden seed words.</span>
+                <span class="tooltiptext">Use the same key (ex., '2 3 4') to find your hidden seed words.</span>
             </label>
-            <input type="text" id="decryptKey" name="decryptKey" placeholder="e.g., 2 3 4" required>
+            <input type="text" id="decryptKey" name="decryptKey" placeholder="ex., 2 3 4" required>
         </div>
         <div class="form-group">
             <label for="decryptIndent" class="tooltip">Cloak Shift (Indent, 0+):
-                <span class="tooltiptext">Match the shift (e.g., '2') used to create the cloak.</span>
+                <span class="tooltiptext">Match the shift (ex., '2') used to create the cloak.</span>
             </label>
-            <input type="number" id="decryptIndent" name="decryptIndent" min="0" placeholder="e.g., 2" required>
+            <input type="number" id="decryptIndent" name="decryptIndent" min="0" placeholder="ex., 2" required>
         </div>
         <div class="form-group">
             <label class="tooltip">Seed Length:
