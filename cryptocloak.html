@@ -252,101 +252,12 @@
             text-shadow: 0 0 10px #00ff99;
         }
 
-        /*.modal {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background: #1e1e1e;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
-        }
-        h2 {
-            color: #4CAF50;
-        }
         .step {
             margin-bottom: 15px;
-        }*/
+        }
     </style>
 </head>
-<body>
-    <!-- Modal -->
-    <!-- <div id="introModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal()">X</span>
-            <h2>Welcome to Crypto Cloak: Secure Your Seed Phrase</h2>
-            <p>Crypto Cloak is a tool designed to protect your BIP-39 seed phrase by encrypting it into a list of 2048 words (the total number of words in the BIP-39 list). This makes it extremely difficult for anyone without the correct key and indentation to access your original seed phrase. The tool is simple to use, highly secure, and can be run locally for added trust.</p>
-            
-            <h3>Why Use Crypto Cloak?</h3>
-            <ul>
-                <li><strong>Security</strong>: Your seed phrase is hidden within a 2048-word list using a key and indentation that only you know. Without these, the list appears random and is nearly impossible to crack.</li>
-                <li><strong>Trust</strong>: You don't need to trust us with your keys to the treasure chest. Download the tool code and run it locally on your machine for complete control and privacy.</li>
-                <li><strong>Portability</strong>: Once encrypted, you can print or save the 2048-word list for secure storage. The list can be kept in plain sight, as it's useless without the key and indentation.</li>
-            </ul>
-
-            <h3>How It Works</h3>
-            <p><strong>Encryption</strong>: Your seed phrase (12 or 24 words) is placed into specific positions within a 2048-word list. These positions are determined by your chosen key (a sequence of numbers, e.g., "2 3 4") and indentation (a starting offset, e.g., "2"). The remaining spots are filled with random BIP-39 words without any duplicates.</p>
-            <p><strong>Decryption</strong>: Using the same key, indentation, and the length of your original seed phrase (12 or 24), the tool extracts your seed phrase from the 2048-word list.</p>
-
-            <h3>Example: Encrypting a Seed Phrase</h3>
-            <p>Let's say your seed phrase is: <code>abandon ability able about above absent absorb abstract absurd abuse access accident</code> (12 words).</p>
-            <p>You choose a key: <code>2 3 4</code> and an indentation: <code>2</code>.</p>
-            <p>The positions for your words are calculated as follows:</p>
-            <ul>
-                <li>First position: indent + (first key number - 1) = 2 + (2 - 1) = 3</li>
-                <li>Second position: 3 + 3 = 6</li>
-                <li>Third position: 6 + 4 = 10</li>
-                <li>Fourth position: 10 + 2 = 12 (key loops back to 2)</li>
-                <li>And so on, until all 12 words are placed.</li>
-            </ul>
-            <p>The final positions for your 12 words would be: 3, 6, 10, 12, 15, 19, 21, 24, 28, 30, 33, 37.</p>
-            <p>The tool then fills the remaining 2036 positions with the remaining BIP-39 words at random, creating a 2048-word list.</p>
-
-            <h3>Example: Decrypting a Seed Phrase</h3>
-            <p>To decrypt using this tool, you would:</p>
-            <ul>
-                <li>Paste the 2048-word list into the "Cloak Text" field.</li>
-                <li>Enter the same key: <code>2 3 4</code> and indentation: <code>2</code>.</li>
-                <li>Select the seed length: <code>12</code>.</li>
-                <li>Click "Unlock Cloak" to retrieve your original seed phrase.</li>
-            </ul>
-
-            <h3>Usage Instructions</h3>
-            <ol>
-                <li><strong>Encrypt</strong>: 
-                    <ul>
-                        <li>Select "Encrypt" mode.</li>
-                        <li>Enter your 12 or 24-word seed phrase in the "Secret Seed Phrase Words" field.</li>
-                        <li>Choose a key (numbers 1-9, separated by spaces) and an indentation (a number ≥ 0).</li>
-                        <li>Click "Create Cloak" to generate the 2048-word list.</li>
-                        <li>Use "Etch Cloak" to print or save the list for secure storage.</li>
-                    </ul>
-                </li>
-                <li><strong>Decrypt</strong>: 
-                    <ul>
-                        <li>Select "Decrypt" mode.</li>
-                        <li>Paste the 2048-word list into "Cloak Text".</li>
-                        <li>Enter the same key, indentation, and seed length used for encryption.</li>
-                        <li>Click "Unlock Cloak" to reveal your seed phrase.</li>
-                    </ul>
-                </li>
-                <li><strong>Run Locally</strong>: 
-                    <ul>
-                        <li>Click "Forge Cloak Code" to download the tool as "cloak.html".</li>
-                        <li>Save it to your computer and open it in a browser to use offline.</li>
-                    </ul>
-                </li>
-            </ol>
-
-            <h3>Important Notes</h3>
-            <ul>
-                <li><strong>Security</strong>: Keep your key and indentation super secret (hopefully easy to memorize). They are essential for decrypting your seed phrase. Remember, even if you use an easy to guess key like your birth date, the identation number provides an extra layer of encryption </li>
-                <li><strong>Printing</strong>: The "Etch Cloak" button allows you to print the 2048-word list. Store it securely—without the key and indentation, without the key it's just a randomized BIP-39 seed word list.</li>
-            </ul>
-
-            <p>Explore the tool, secure your seed phrases, and sleep better with your new cloak.</p>
-        </div>
-    </div> -->
-    
+<body> 
     <div id="introModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal()">X</span>
@@ -357,7 +268,7 @@
             <div class="step">1️⃣ <b>Input Your Seed Phrase</b><br>Enter your 12- or 24-word recovery phrase securely on your device. It never leaves your device—because we’re not nosy.</div>
             <div class="step">2️⃣ <b>Encryption: Convert to a Secure Cipher</b><br>Your phrase is transformed into an unreadable 2048-word encrypted list using a secure algorithm. Basically, it turns into digital soup utilizing all words in the BIP-39 list.</div>
             <div class="step">3️⃣ <b>Store Your Cipher & Encryption Key</b><br>Save your cipher physically or digitally. Just don’t write it on a sticky note labeled "Super Secret Seed Phrase."</div>
-            <div class="step">4️⃣ <b>Decryption: Recover Your Seed Anytime</b><br>Enter your encryption key, indentation amount and cipher to restore your original seed phrase. Like magic—but nerdier.</div>
+            <div class="step">4️⃣ <b>Decryption: Recover Your Seed Anytime</b><br>Enter your encryption key, identation amount and cipher to restore your original seed phrase. Like magic—but nerdier.</div>
 
             <h2>🔓 How to Find Your Seed Phrase</h2>
             <p>Your encrypted seed phrase is hidden inside the 2048-word list, and your <b>key + indentation</b> are the secret instructions to extract it. Think of it like a <b>treasure map</b>—except the treasure is your crypto, and the pirates are hackers.</p>
@@ -374,40 +285,24 @@
             <p><b>Either use our built in decrypt functionality (easy mode) or use the instructions below to manually decrypt.</b></p>
             <p>Each number in your key tells you how far to hop through the word list to find the next seed word. Think of it as the ultimate game of leapfrog.</p>
             <ul>
-                <li>1️⃣ <b>Start at your indentation value:</b> If your indentation is 2, start at word #2.</li>
-                <li>2️⃣ <b>Move forward using your key numbers:</b> If your key is 2 3 4, move:</li>
+                <li>1️⃣ <b>Start at your indentation value:</b> If your chosen indentation is 100, start at word #100.</li>
+                <li>2️⃣ <b>Move forward using your key numbers:</b> If your key is 2 5 7 3 9 1, move:</li>
                 <ul>
-                    <li>+2 → Find your 1st seed word.</li>
-                    <li>+3 → Find your 2nd seed word.</li>
-                    <li>+4 → Find your 3rd seed word.</li>
+                    <li>+2 → Word #102 → (1st seed word)</li>
+                    <li>+5 → Word #107 → (2nd seed word)</li>
+                    <li>+7 → Word #114 → (3rd seed word)</li>
+                    <li>+3 → Word #117 → (4th seed word)</li>
+                    <li>+9 → Word #126 → (5th seed word)</li>
+                    <li>+1 → Word #127 → (6th seed word)</li>
+                    <li>+2 → Word #129 → (7th seed word) (restart key sequence, loop back to the beginning of the key and continue)</li>
+                    <li>+5 → Word #134 → (8th seed word)</li>
+                    <li>+7 → Word #141 → (9th seed word)</li>
+                    <li>+3 → Word #144 → (10th seed word)</li>
+                    <li>+9 → Word #153 → (11th seed word)</li>
+                    <li>+1 → Word #154 → (12th seed word)</li>
                 </ul>
-                <li>3️⃣ <b>Repeat the key sequence:</b> Loop back to the beginning of the key and continue.</li>
+                <p>📌 Boom! You’ve recovered your seed phrase.</p>
             </ul>
-            
-            <h3>📌 Example Walkthrough</h3>
-            <p>Let’s say:</p>
-            <ul>
-                <li><b>Indentation:</b> 2</li>
-                <li><b>Key:</b> 2 3 4</li>
-                <li><b>Seed phrase length:</b> 12 words</li>
-            </ul>
-            <p>🔹 Start at word #2 in the list.</p>
-            <p>🔹 Use the key to find each word:</p>
-            <ul>
-                <li>+2 → Word #4 → (1st seed word)</li>
-                <li>+3 → Word #7 → (2nd seed word)</li>
-                <li>+4 → Word #11 → (3rd seed word)</li>
-                <li>+2 → Word #13 → (4th seed word) (restart key sequence)</li>
-                <li>+3 → Word #16 → (5th seed word)</li>
-                <li>+4 → Word #20 → (6th seed word)</li>
-                <li>+2 → Word #22 → (7th seed word)</li>
-                <li>+3 → Word #25 → (8th seed word)</li>
-                <li>+4 → Word #29 → (9th seed word)</li>
-                <li>+2 → Word #31 → (10th seed word)</li>
-                <li>+3 → Word #34 → (11th seed word)</li>
-                <li>+4 → Word #38 → (12th seed word)</li>
-            </ul>
-            <p>📌 Boom! You’ve recovered your seed phrase.</p>
             
             <h3>💡 Why This Is Secure</h3>
             <ul>
@@ -420,6 +315,9 @@
         
             <h3>🖨️ Print Your Seed (If You Dare)</h3>
             <p>Want a hard copy? You have the option to print your seed phrases. We've really thought of it all.</p>
+
+            <h2>⚠️ Important Security Notice</h2>
+            <p>This method uses <b>deterministic encryption</b>, meaning that using the same inputs will always put your seed phrase in the same places in the list (although the rest of the words will be randomized each time). While this ensures you can recover your seed phrase reliably, it also means that if an attacker gains access to multiple encrypted outputs with the same inputs, they may be able to decipher your seed phrase faster. Always use strong, unique keys and avoid predictable patterns. <b>You can safely keep several copies of the same encrypted cipher, but it is not recommended to have different versions of the encrypted cipher with the same seed phrase, key, and ident combination.</b></p>
         </div>
     </div>
     <h1 id="title" class="tooltip">Crypto Cloak: Wallet Seed Phrase Encryption
